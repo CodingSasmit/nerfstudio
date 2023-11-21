@@ -62,33 +62,11 @@ RUN apt-get update && \
     sudo \
     vim-tiny \
     wget && \
+    libceres-dev && \
     rm -rf /var/lib/apt/lists/*
 
-
-# Install GLOG (required by ceres).
-RUN git clone --branch v0.6.0 https://github.com/google/glog.git --single-branch && \
-    cd glog && \
-    mkdir build && \
-    cd build && \
-    cmake .. && \
-    make -j `nproc` && \
-    make install && \
-    cd ../.. && \
-    rm -rf glog
 # Add glog path to LD_LIBRARY_PATH.
 ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib"
-
-# Install Ceres-solver (required by colmap).
-RUN git clone --branch 2.1.0 https://ceres-solver.googlesource.com/ceres-solver.git --single-branch && \
-    cd ceres-solver && \
-    git checkout $(git describe --tags) && \
-    mkdir build && \
-    cd build && \
-    cmake .. -DBUILD_TESTING=OFF -DBUILD_EXAMPLES=OFF && \
-    make -j `nproc` && \
-    make install && \
-    cd ../.. && \
-    rm -rf ceres-solver
 
 # Install colmap.
 RUN git clone --branch 3.8 https://github.com/colmap/colmap.git --single-branch && \
